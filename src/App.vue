@@ -1,26 +1,37 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Welcome to Your Vue.js App" />
+  <Panel header="Сервис анализа друзей ВК">
+    <TabMenu :model="items" v-if="$route.name != 'friend'" />
+    <router-view />
+  </Panel>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
-
 export default {
   name: "App",
-  components: {
-    HelloWorld,
-  },
+
+  data: () => ({
+    items: [
+      { label: "Поиск пользователей", icon: "pi pi-fw pi-search", to: "/" },
+      {
+        label: "Список пользователей",
+        icon: "pi pi-fw pi-calendar",
+        to: "/persons",
+      },
+      {
+        label: "Построить друзей",
+        icon: "pi pi-fw pi-calendar",
+        to: "/friends",
+      },
+    ],
+  }),
 };
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.p-dataview-content {
+  margin-top: 20px;
+}
+.p-tabmenu {
+  margin-bottom: 30px;
 }
 </style>
