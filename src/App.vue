@@ -14,12 +14,12 @@ export default {
       { label: "Поиск пользователей", icon: "pi pi-fw pi-search", to: "/" },
       {
         label: "Список пользователей",
-        icon: "pi pi-fw pi-calendar",
+        icon: "pi pi-fw pi-users",
         to: "/persons",
       },
       {
         label: "Построить друзей",
-        icon: "pi pi-fw pi-calendar",
+        icon: "pi pi-fw pi-sitemap",
         to: "/friends",
       },
     ],

@@ -1,7 +1,7 @@
 import { jsonp } from "vue-jsonp";
 
 let TOKEN =
-  "ad5f3a90322cf8016aa37327e3080fb0dcbe7ff1d36901869a37d71cc3dc394fda87565614fb00d7d292b";
+  "2df869b6453a45e5dc2bc064c7a15595aa33873c06deb17f4c50d0e57dc3a5474aa9687fbcd9dcfbfe72a";
 
 let api = {
   async getUserFriends(id) {
