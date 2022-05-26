@@ -1,7 +1,7 @@
 import { jsonp } from "vue-jsonp";
 
-let TOKEN =
-  "827d8976d0ce2f9709e1712cd8b649a719367b9d6e4bf7125fa371112ad1c1dbe76d0d03ba2a5033bc7f3";
+
+let TOKEN = "208f0469208f0469208f04697d20f3a7fe2208f208f0469420d51770ede3e5d2ec735ce";
 
 let api = {
   async getUserFriends(id) {
@@ -18,9 +18,9 @@ let api = {
     console.log(id);
     try {
       let data = await jsonp(
-        `https://api.vk.com/method/users.get?user_id=${id}&fields=counters&access_token=${TOKEN}&v=5.131`
+        `https://api.vk.com/method/friends.get?user_id=${id}&access_token=${TOKEN}&v=5.131`
       );
-      return data.response[0].counters.friends;
+      return data.response.count;
     } catch (error) {
       console.log(error);
     }
