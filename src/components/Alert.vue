@@ -5,7 +5,12 @@
 <script>
 export default {
     name: "Alert",
-    props: ["mes", "type"]
+    props: ["mes", "type"],
+    mounted() {
+      setTimeout(() => {
+        this.$store.commit("SET_ALERT_SEARCH", null);
+      }, 2000)
+    }
   }
 </script>
 

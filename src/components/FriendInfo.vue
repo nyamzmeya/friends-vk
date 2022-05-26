@@ -30,7 +30,6 @@ export default {
   data: () => ({
     items: [
       { label: "Друзья", icon: "pi pi-fw pi-search", to: "/friend/:id" },
-      // {label: 'Посты', icon: 'pi pi-fw pi-calendar', to: '/posts/:id'},
     ],
   }),
 };

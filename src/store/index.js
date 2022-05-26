@@ -23,10 +23,11 @@ export default createStore({
     persons: [],
     friends: [],
     isLoading: false,
-    alert_persons: "Добавленных пользователей пока нет!",
+    alert_persons: {mes: "Добавленных пользователей пока нет!", type: "warn"},
     alert_search: null,
     currentFriend: null,
     friend_posts: null,
+    addIsLoading: false,
   },
   getters: {
     CURRENTPERSON: (state) => {
@@ -37,6 +38,9 @@ export default createStore({
     },
     ISLOADING: (state) => {
       return state.isLoading;
+    },
+    ADDISLOADING: (state) => {
+      return state.addIsLoading;
     },
     ALERT_SEARCH: (state) => {
       return state.alert_search;
@@ -65,6 +69,9 @@ export default createStore({
     },
     SET_LOADING: (state, payload) => {
       state.isLoading = payload;
+    },
+    SET_ADD_LOADING: (state, payload) => {
+      state.addIsLoading = payload;
     },
     SET_ALERT_SEARCH: (state, payload) => {
       state.alert_search = payload;
@@ -139,28 +146,40 @@ export default createStore({
         context.commit("SET_LOADING", false);
         return;
       }
-      if (data.response[0].deactivated == "deleted") {
+      if (data.response[0].deactivated == "deleted" || data.response[0].deactivated == "banned") {
         context.commit("SET_ALERT_SEARCH", {
-          mes: "Упс! Кажется пользователь с таким id удален",
+          mes: "Упс! Кажется пользователь с таким id удален или забанен",
           type: "warn",
         });
         context.commit("SET_CURRENTPERSON", null);
-      } else if (data.response[0].is_closed) {
+        context.commit("SET_LOADING", false);
+        return;
+      }
+      if (data.response[0].is_closed) {
         context.commit("SET_ALERT_SEARCH", {
           mes: "Упс! Кажется профиль пользователя закрыт и мы не сможем добавить его друзей",
           type: "warn",
         });
         context.commit("SET_CURRENTPERSON", null);
-      } else {
-        context.commit("SET_ALERT_SEARCH", null);
-        context.commit("SET_CURRENTPERSON", data.response[0]);
+        context.commit("SET_LOADING", false);
+        return;
       }
-      context.commit("SET_LOADING", false);
+      if (context.state.persons.map(person => person.id).includes(data.response[0].id)) {
+        context.commit("SET_ALERT_SEARCH", {
+          mes: "Пользователь с таким id уже добавлен!",
+          type: "warn",
+        });
+        context.commit("SET_CURRENTPERSON", null);
+        context.commit("SET_LOADING", false);
+        return;
+      }
       context.commit("SET_ALERT_SEARCH", null);
+      context.commit("SET_CURRENTPERSON", data.response[0]);
+      context.commit("SET_LOADING", false);
     },
     ADD_PERSON_TO_LIST: async (context, person) => {
       context.commit("ADD_PERSON", person);
-      context.commit("SET_LOADING", true);
+      context.commit("SET_ADD_LOADING", true);
 
       let data = await api.getUserFriends(person.id);
       if (data.response.items.length != 0) {
@@ -177,7 +196,7 @@ export default createStore({
         ]);
       }
 
-      context.commit("SET_LOADING", false);
+      context.commit("SET_ADD_LOADING", false);
     },
     FETCH_FRIENDS_NUM: async (context, nums) => {
       let data = await Promise.all(

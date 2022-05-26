@@ -12,6 +12,7 @@
           label="Добавить"
           class="p-button-sm"
           v-on:click="addPerson(person)"
+          :loading="this.$store.getters.ADDISLOADING"
           :disabled="added"
         />
         <Button
@@ -31,8 +32,15 @@
   max-width: 200px;
 }
 
+.p-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .person {
   width: 200px;
+  height: 100%;
 }
 .p-card-content,
 .p-card-footer {
