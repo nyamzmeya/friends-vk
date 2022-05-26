@@ -15,7 +15,6 @@ let api = {
     }
   },
   async getNumFriends(id) {
-    console.log(id);
     try {
       let data = await jsonp(
         `https://api.vk.com/method/friends.get?user_id=${id}&access_token=${TOKEN}&v=5.131`

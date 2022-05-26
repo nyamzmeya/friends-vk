@@ -29,6 +29,7 @@ import BadgeDirective from "primevue/badgedirective";
 import Tooltip from "primevue/tooltip";
 import Panel from 'primevue/panel';
 
+
 import { createRouter, createWebHashHistory } from "vue-router";
 
 loadFonts();

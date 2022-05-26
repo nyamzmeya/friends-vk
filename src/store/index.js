@@ -23,7 +23,7 @@ export default createStore({
     persons: [],
     friends: [],
     isLoading: false,
-    alert_persons: {mes: "Добавленных пользователей пока нет!", type: "warn"},
+    alert_persons: { mes: "Добавленных пользователей пока нет!", type: "warn" },
     alert_search: null,
     currentFriend: null,
     friend_posts: null,
@@ -84,10 +84,29 @@ export default createStore({
         state.currentPerson = null;
       }
       state.persons = state.persons.filter((person) => person.id != payload.id);
-      state.friends = state.friends.filter(
-        (friend) =>
-          friend.friend_of.length != 1 && friend.friend_of[0].id != payload.id
-      );
+      state.friends = state.friends.filter((friend) => {
+        if (
+          friend.friend_of.length == 1 &&
+          friend.friend_of[0].id == payload.id
+        ) {
+          return false;
+        } else return true;
+      });
+      for (let i = 0; i < state.friends.length; i++) {
+        if (
+          state.friends[i].friend_of
+            .map((friend) => friend.id)
+            .includes(payload.id)
+        ) {
+          if (state.friends[i].friend_of.length == 1) {
+            state.friends.splice(i, 1);
+          } else {
+            state.friends[i].friend_of = state.friends[i].friend_of.filter(
+              (friend) => friend.id != payload.id
+            );
+          }
+        }
+      }
       state.alert_persons = {
         mes: "Пользователь удален из списка!",
         type: "success",
@@ -108,13 +127,7 @@ export default createStore({
         }
       });
       state.friends = state.friends.sort((a, b) =>
-        a.last_name > b.last_name
-          ? 1
-          : a.last_name === b.last_name
-          ? a.first_name > b.first_name
-            ? 1
-            : -1
-          : -1
+        a.last_name.localeCompare(b.last_name)
       );
     },
     ADD_FRIENS_NUM: (state, payload) => {
@@ -146,7 +159,10 @@ export default createStore({
         context.commit("SET_LOADING", false);
         return;
       }
-      if (data.response[0].deactivated == "deleted" || data.response[0].deactivated == "banned") {
+      if (
+        data.response[0].deactivated == "deleted" ||
+        data.response[0].deactivated == "banned"
+      ) {
         context.commit("SET_ALERT_SEARCH", {
           mes: "Упс! Кажется пользователь с таким id удален или забанен",
           type: "warn",
@@ -164,7 +180,11 @@ export default createStore({
         context.commit("SET_LOADING", false);
         return;
       }
-      if (context.state.persons.map(person => person.id).includes(data.response[0].id)) {
+      if (
+        context.state.persons
+          .map((person) => person.id)
+          .includes(data.response[0].id)
+      ) {
         context.commit("SET_ALERT_SEARCH", {
           mes: "Пользователь с таким id уже добавлен!",
           type: "warn",
@@ -210,10 +230,12 @@ export default createStore({
     },
     GET_POSTS: async (context, id) => {
       let data = await api.getPosts(id);
-      data = data.map((post) => {
-        post.date = getDate(post.date);
-        return post;
-      });
+      data = data
+        ? data.map((post) => {
+            post.date = getDate(post.date);
+            return post;
+          })
+        : null;
       context.commit("ADD_FRIEND_POSTS", data);
     },
   },

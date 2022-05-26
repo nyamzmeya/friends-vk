@@ -5,7 +5,7 @@
     </template>
     <template #content>
       <div class="person_info">
-        <div>{{ person.first_name }} {{ person.last_name }}</div>
+        <div class="name">{{ person.last_name }} {{ person.first_name }}</div>
 
         <Button
           icon="pi pi-check"
@@ -19,7 +19,7 @@
           class="p-button-sm p-button-secondary"
           icon="pi pi-trash"
           label="Удалить"
-          :disabled="!added"
+          :disabled="deleteDis"
           v-on:click="deletePerson(person)"
         />
       </div>
@@ -57,10 +57,13 @@
 <script>
 export default {
   name: "Person",
-  props: ["person"],
+  props: ["person", "deleteDisable"],
   computed: {
     added() {
       return this.person.added;
+    },
+    deleteDis() {
+      return this.deleteDisable ? this.deleteDisable : !this.added;
     },
   },
   methods: {

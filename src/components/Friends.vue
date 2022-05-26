@@ -24,7 +24,7 @@
           >
             <div class="content">
               <img :src="data.photo_200_orig" />
-              <div class="name">{{ data.first_name }} {{ data.last_name }}</div>
+              <div class="name">{{ data.last_name }} {{ data.first_name }}</div>
               <div>
                 Пол:
                 <Tag>{{
@@ -34,7 +34,7 @@
               <div v-if="data.age">
                 Возраст: <Tag>{{ data.age }}</Tag>
               </div>
-              <div>
+              <div v-if="data.friendsNum">
                 Всего друзей: <Tag>{{ data.friendsNum }}</Tag>
               </div>
               <div>
@@ -55,7 +55,7 @@
           </div>
         </div>
 
-        <Person v-else :person="data" />
+        <Person class="card_item" v-else :person="data" style="cursor: no-ponter" :deleteDisable="deleteDisable"/>
       </template>
     </DataView>
   </div>
@@ -69,7 +69,7 @@ import Person from "./Person.vue";
 export default {
   components: { Alert, Person },
   name: "Friends",
-  props: ["friends_props", "name"],
+  props: ["friends_props", "name", "deleteDisable"],
   mounted() {
     if (!this.friends_props) {
       this.$store.getters.FRIENDS.length != 0
@@ -136,5 +136,6 @@ export default {
 .name {
   font-size: 1.5rem;
   font-weight: 700;
+  text-align: center;
 }
 </style>

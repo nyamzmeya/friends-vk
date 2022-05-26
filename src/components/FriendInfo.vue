@@ -1,5 +1,5 @@
 <template>
-  <Friends :friends_props="friends" :name="name"/>
+  <Friends :friends_props="friends" :name="name" :deleteDisable="true"/>
   <Posts :posts="posts" :name="name"/>
 </template>
 
